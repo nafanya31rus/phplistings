@@ -1,0 +1,42 @@
+<?php
+function showForm() {
+    $string = "<form action = '".$_SERVER['REQUEST_URI']."' method ='post'>";
+    $string .= "<label>Логин: </label>";
+    $string .= "<input type ='text' name = 'login'>";
+    $string .= "";
+    $string .= "<label>Пароль: </label>";
+    $string .= "<input type ='password' name = 'pass'>";
+    $string .= "";
+    $string .= "<input type = 'submit' name = 'log' value = 'Войти'>";
+    $string .= "</form>";
+    return $string;
+}
+function check($login, $pass) {
+    if(($login == "admin") && ($pass == md5("12345"))) return true;
+    else return false;
+}
+if(isset($_POST['log'])) {
+    $login = $_POST['login'];
+    $pass = md5($_POST['pass']);
+    if (check($login, $pass)) {
+        setcookie("login", $login);
+        setcookie("pass", $pass);
+        $_COOKIE['login'] = $login;
+        $_COOKIE['pass'] = $pass;
+    }
+    else echo "Вы ввели неверные данные. Пожалуйста, попробуйте ещё раз";
+}
+?>
+<html>
+<head>
+<META http-equiv=content-type content="text/html"; charset="windows-1251">
+</head>
+<body>
+    <?php
+        $login = $_COOKIE['login'];
+        $pass = $_COOKIE['pass'];
+        if(check($login, $pass)) echo "Здравствуйте, $login!<br>";
+        else echo showForm();
+    ?>
+</body>
+</html>        
